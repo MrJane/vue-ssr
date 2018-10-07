@@ -107,7 +107,7 @@ if (isDev) {
         },
         plugins:defaultPlugins.concat([
             new webpack.HotModuleReplacementPlugin(),
-            new webpack.NoEmitOnErrorsPlugin()   //减少出现 不必要的错误信息
+            // new webpack.NoEmitOnErrorsPlugin() webpack4也取消掉了   //减少出现 不必要的错误信息
         ])
     })
     // config.module.rules.push({
@@ -144,7 +144,7 @@ if (isDev) {
     config = merge(baseConfig,{
         entry:{
             app: path.join(__dirname, '../src/main.js'),
-            vendor: ['vue']   //比如 vendor: ['vue','vue-rooter']
+            // vendor: ['vue']   //比如 vendor: ['vue','vue-rooter']
         },
         output:{
             filename:'[name].[chunkhash:8].js'
@@ -169,14 +169,20 @@ if (isDev) {
                 }
             ]
         },
+        optimization:{
+          spliteChunk:{
+            chunks:'all'
+          },
+          runtimeChunk:true
+        },
         plugins:defaultPlugins.concat([
             new ExtractPlugin('styles.[contentHash:8].css'),  //将输出的css文件进行hash转换
-            new webpack.optimize.CommonsChunkPlugin({
-                name: 'vendor'  //注意，name里的值是自己起的，但要和上面的值保持一致。
-            }),
-            new webpack.optimize.CommonsChunkPlugin({
-                name: 'runtime'
-            })
+            // new webpack.optimize.CommonsChunkPlugin({
+            //     name: 'vendor'  //注意，name里的值是自己起的，但要和上面的值保持一致。
+            // }),
+            // new webpack.optimize.CommonsChunkPlugin({
+            //     name: 'runtime'
+            // }) 在webpack4已经废弃掉了，但可以加个配置项optimization 是个对象
         ])
 
     });
